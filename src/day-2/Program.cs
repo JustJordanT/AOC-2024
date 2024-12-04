@@ -15,7 +15,7 @@ void Aoc(string filePath)
             int[] row = line.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
             data.Add(row);
 
-            if (IsSafe(row))
+            if (IsSafeReport(row))
             {
                 safereports++;
             }
@@ -25,21 +25,31 @@ void Aoc(string filePath)
     }
 }
 
-bool IsSafe(int[] levels)
+bool IsSafeReport(int[] levels)
 {
-    bool increasing = levels[0] < levels[^1];
-    for (int i = 0; i < levels.Length - 1; i++)
+    bool isIncreasing = true;
+    bool isDecreasing = true;
+
+
+    for (int i = 1; i < levels.Length; i++)
     {
-        int diff = levels[i + 1] - levels[i];
-        Console.WriteLine(diff);
-        Console.WriteLine($"Abs: {Math.Abs(diff)}");
-        if (Math.Abs(diff) < 1 || Math.Abs(diff) > 3 || (increasing && diff <= 0) || (!increasing && diff >= 0))
+        int diff = levels[i] - levels[i - 1];
+        if (Math.Abs(diff) < 1 || Math.Abs(diff) > 3)
         {
             return false;
         }
 
+        if (diff > 0)
+        {
+            isDecreasing = false;
+        }
+        else if (diff < 0)
+        {
+            isIncreasing = false;
+        }
+
     }
-    return true;
+    return isIncreasing || isDecreasing;
 }
 
 Aoc(filePath);
