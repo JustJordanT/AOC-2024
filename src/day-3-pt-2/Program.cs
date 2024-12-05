@@ -7,15 +7,17 @@ string filePath = @"input.txt";
 using StreamReader sr = new StreamReader(filePath);
 string line;
 long total = 0;
+bool enabled = true;
 while ((line = sr.ReadLine()) != null)
 {
     Regex regex = new Regex(@"mul\((\d+),(\d+)\)|(do\(\)|don't\(\))");
     MatchCollection matches = regex.Matches(line);
 
-    bool enabled = true;
 
     foreach (Match match in matches)
     {
+        Console.WriteLine(match);
+        Console.WriteLine();
         if (match.Value.Contains("do()"))
         {
             enabled = true;
@@ -24,13 +26,12 @@ while ((line = sr.ReadLine()) != null)
         {
             enabled = false;
         }
-        if (enabled && match.Value.Contains("mul("))
+        if (enabled && match.Value.Contains("mul"))
         {
             Console.WriteLine($"MATCH: {match.Value}");
             string[] numbers = match.Value.Substring(4, match.Value.Length - 5).Split(',');
             total += (int.Parse(numbers[0]) * int.Parse(numbers[1]));
         }
-
     }
 }
 
